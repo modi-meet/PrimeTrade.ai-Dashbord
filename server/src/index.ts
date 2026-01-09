@@ -2,9 +2,25 @@ import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
+import path from 'path';
+import fs from 'fs';
 import { connectDB } from './config/db';
 
-dotenv.config();
+// Load .env file only in development (Railway/production sets env vars directly)
+if (process.env.NODE_ENV !== 'production') {
+    const envPaths = [
+        path.join(process.cwd(), '.env'),
+        path.join(process.cwd(), 'server', '.env'),
+        path.join(__dirname, '..', '.env'),
+    ];
+
+    for (const envPath of envPaths) {
+        if (fs.existsSync(envPath)) {
+            dotenv.config({ path: envPath });
+            break;
+        }
+    }
+}
 
 const app: Express = express();
 const port = Number(process.env.PORT) || 5000;
@@ -34,6 +50,7 @@ app.get('/', (req: Request, res: Response) => {
 // Start server with database connection
 const startServer = async () => {
     try {
+        console.log('Starting server on port:', port);
         await connectDB();
 
         app.listen(port, '0.0.0.0', () => {
