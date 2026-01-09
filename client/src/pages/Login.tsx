@@ -3,7 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../hooks/useAuth';
 import { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, AlertCircle } from 'lucide-react';
+import { Spinner } from '../components/Spinner';
 
 interface LoginForm {
     email: string;
@@ -23,7 +24,7 @@ export const Login = () => {
             login(response.data);
             navigate('/');
         } catch (err: any) {
-            setError(err.response?.data?.message || 'Login failed');
+            setError(err.response?.data?.message || 'Login failed. Please try again.');
         }
     };
 
@@ -37,7 +38,7 @@ export const Login = () => {
 
                 <div className="relative z-10">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md">
                             <span className="text-slate-900 font-bold text-xl">P</span>
                         </div>
                         <span className="text-white font-bold text-xl tracking-tight">PrimeTrade</span>
@@ -45,10 +46,10 @@ export const Login = () => {
                 </div>
 
                 <div className="relative z-10">
-                    <h2 className="text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight mb-6">
+                    <h2 className="text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
                         Focus on what<br />matters most.
                     </h2>
-                    <p className="text-slate-400 text-lg max-w-md">
+                    <p className="text-slate-400 text-lg max-w-md leading-relaxed">
                         A simple, powerful task manager designed to help you stay organized and productive.
                     </p>
                 </div>
@@ -58,19 +59,20 @@ export const Login = () => {
 
             {/* Right Panel - Form */}
             <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-16">
-                <div className="w-full max-w-md">
+                <div className="w-full max-w-md fade-in">
                     <div className="lg:hidden mb-10 flex items-center gap-3">
-                        <div className="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center">
+                        <div className="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center shadow-sm">
                             <span className="text-white font-bold text-xl">P</span>
                         </div>
                         <span className="text-slate-900 font-bold text-xl tracking-tight">PrimeTrade</span>
                     </div>
 
-                    <h2 className="text-3xl font-bold text-slate-900 tracking-tight mb-2">Welcome back</h2>
+                    <h2 className="text-3xl font-bold text-slate-900 mb-2">Welcome back</h2>
                     <p className="text-slate-500 mb-8">Sign in to your account to continue.</p>
 
                     {error && (
-                        <div className="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 text-sm">
+                        <div className="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-sm flex items-center gap-3 scale-in">
+                            <AlertCircle size={18} className="flex-shrink-0" />
                             {error}
                         </div>
                     )}
@@ -84,10 +86,15 @@ export const Login = () => {
                                     required: 'Email is required',
                                     pattern: { value: /^\S+@\S+$/i, message: 'Enter a valid email' }
                                 })}
-                                className="input-field"
+                                className={`input-field ${errors.email ? 'border-rose-300 focus:border-rose-400 focus:ring-rose-100' : ''}`}
                                 placeholder="you@example.com"
                             />
-                            {errors.email && <p className="error-text">{errors.email.message}</p>}
+                            {errors.email && (
+                                <p className="error-text">
+                                    <AlertCircle size={14} />
+                                    {errors.email.message}
+                                </p>
+                            )}
                         </div>
 
                         <div>
@@ -98,14 +105,24 @@ export const Login = () => {
                                     required: 'Password is required',
                                     minLength: { value: 6, message: 'Minimum 6 characters' }
                                 })}
-                                className="input-field"
+                                className={`input-field ${errors.password ? 'border-rose-300 focus:border-rose-400 focus:ring-rose-100' : ''}`}
                                 placeholder="••••••••"
                             />
-                            {errors.password && <p className="error-text">{errors.password.message}</p>}
+                            {errors.password && (
+                                <p className="error-text">
+                                    <AlertCircle size={14} />
+                                    {errors.password.message}
+                                </p>
+                            )}
                         </div>
 
                         <button type="submit" disabled={isSubmitting} className="btn-primary w-full flex items-center justify-center gap-2">
-                            {isSubmitting ? 'Signing in...' : (
+                            {isSubmitting ? (
+                                <>
+                                    <Spinner size="sm" className="border-white/30 border-t-white" />
+                                    Signing in...
+                                </>
+                            ) : (
                                 <>
                                     Sign in
                                     <ArrowRight size={18} />

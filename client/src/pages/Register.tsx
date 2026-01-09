@@ -3,7 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../hooks/useAuth';
 import { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Spinner } from '../components/Spinner';
 
 interface RegisterForm {
     name: string;
@@ -12,10 +13,11 @@ interface RegisterForm {
 }
 
 export const Register = () => {
-    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterForm>();
+    const { register, handleSubmit, formState: { errors, isSubmitting }, watch } = useForm<RegisterForm>();
     const navigate = useNavigate();
     const { login } = useAuth();
     const [error, setError] = useState('');
+    const password = watch('password', '');
 
     const onSubmit = async (data: RegisterForm) => {
         try {
@@ -24,9 +26,11 @@ export const Register = () => {
             login(response.data);
             navigate('/');
         } catch (err: any) {
-            setError(err.response?.data?.message || 'Registration failed');
+            setError(err.response?.data?.message || 'Registration failed. Please try again.');
         }
     };
+
+    const passwordStrength = password.length >= 8 ? 'strong' : password.length >= 6 ? 'medium' : 'weak';
 
     return (
         <div className="min-h-screen flex">
@@ -38,7 +42,7 @@ export const Register = () => {
 
                 <div className="relative z-10">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md">
                             <span className="text-slate-900 font-bold text-xl">P</span>
                         </div>
                         <span className="text-white font-bold text-xl tracking-tight">PrimeTrade</span>
@@ -46,12 +50,22 @@ export const Register = () => {
                 </div>
 
                 <div className="relative z-10">
-                    <h2 className="text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight mb-6">
+                    <h2 className="text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
                         Start your<br />productivity journey.
                     </h2>
-                    <p className="text-slate-400 text-lg max-w-md">
+                    <p className="text-slate-400 text-lg max-w-md leading-relaxed">
                         Join thousands of users who manage their tasks efficiently with PrimeTrade.
                     </p>
+
+                    {/* Features */}
+                    <div className="mt-8 space-y-3">
+                        {['Simple task management', 'Secure authentication', 'Cloud sync'].map((feature) => (
+                            <div key={feature} className="flex items-center gap-2 text-slate-300">
+                                <CheckCircle2 size={16} className="text-emerald-400" />
+                                <span className="text-sm">{feature}</span>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 <p className="relative z-10 text-slate-500 text-sm">© 2026 PrimeTrade. All rights reserved.</p>
@@ -59,19 +73,20 @@ export const Register = () => {
 
             {/* Right Panel - Form */}
             <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-16">
-                <div className="w-full max-w-md">
+                <div className="w-full max-w-md fade-in">
                     <div className="lg:hidden mb-10 flex items-center gap-3">
-                        <div className="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center">
+                        <div className="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center shadow-sm">
                             <span className="text-white font-bold text-xl">P</span>
                         </div>
                         <span className="text-slate-900 font-bold text-xl tracking-tight">PrimeTrade</span>
                     </div>
 
-                    <h2 className="text-3xl font-bold text-slate-900 tracking-tight mb-2">Create an account</h2>
+                    <h2 className="text-3xl font-bold text-slate-900 mb-2">Create an account</h2>
                     <p className="text-slate-500 mb-8">Get started with your free account today.</p>
 
                     {error && (
-                        <div className="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 text-sm">
+                        <div className="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-sm flex items-center gap-3 scale-in">
+                            <AlertCircle size={18} className="flex-shrink-0" />
                             {error}
                         </div>
                     )}
@@ -82,10 +97,15 @@ export const Register = () => {
                             <input
                                 type="text"
                                 {...register('name', { required: 'Name is required' })}
-                                className="input-field"
+                                className={`input-field ${errors.name ? 'border-rose-300' : ''}`}
                                 placeholder="John Doe"
                             />
-                            {errors.name && <p className="error-text">{errors.name.message}</p>}
+                            {errors.name && (
+                                <p className="error-text">
+                                    <AlertCircle size={14} />
+                                    {errors.name.message}
+                                </p>
+                            )}
                         </div>
 
                         <div>
@@ -96,10 +116,15 @@ export const Register = () => {
                                     required: 'Email is required',
                                     pattern: { value: /^\S+@\S+$/i, message: 'Enter a valid email' }
                                 })}
-                                className="input-field"
+                                className={`input-field ${errors.email ? 'border-rose-300' : ''}`}
                                 placeholder="you@example.com"
                             />
-                            {errors.email && <p className="error-text">{errors.email.message}</p>}
+                            {errors.email && (
+                                <p className="error-text">
+                                    <AlertCircle size={14} />
+                                    {errors.email.message}
+                                </p>
+                            )}
                         </div>
 
                         <div>
@@ -110,14 +135,42 @@ export const Register = () => {
                                     required: 'Password is required',
                                     minLength: { value: 6, message: 'Minimum 6 characters' }
                                 })}
-                                className="input-field"
+                                className={`input-field ${errors.password ? 'border-rose-300' : ''}`}
                                 placeholder="••••••••"
                             />
-                            {errors.password && <p className="error-text">{errors.password.message}</p>}
+                            {password && (
+                                <div className="mt-2 flex items-center gap-2">
+                                    <div className="flex-1 h-1 bg-slate-200 rounded-full overflow-hidden">
+                                        <div
+                                            className={`h-full transition-all duration-300 ${passwordStrength === 'strong' ? 'w-full bg-emerald-500'
+                                                    : passwordStrength === 'medium' ? 'w-2/3 bg-amber-500'
+                                                        : 'w-1/3 bg-rose-500'
+                                                }`}
+                                        />
+                                    </div>
+                                    <span className={`text-xs ${passwordStrength === 'strong' ? 'text-emerald-600'
+                                            : passwordStrength === 'medium' ? 'text-amber-600'
+                                                : 'text-rose-600'
+                                        }`}>
+                                        {passwordStrength === 'strong' ? 'Strong' : passwordStrength === 'medium' ? 'Medium' : 'Weak'}
+                                    </span>
+                                </div>
+                            )}
+                            {errors.password && (
+                                <p className="error-text">
+                                    <AlertCircle size={14} />
+                                    {errors.password.message}
+                                </p>
+                            )}
                         </div>
 
                         <button type="submit" disabled={isSubmitting} className="btn-primary w-full flex items-center justify-center gap-2">
-                            {isSubmitting ? 'Creating account...' : (
+                            {isSubmitting ? (
+                                <>
+                                    <Spinner size="sm" className="border-white/30 border-t-white" />
+                                    Creating account...
+                                </>
+                            ) : (
                                 <>
                                     Get started
                                     <ArrowRight size={18} />

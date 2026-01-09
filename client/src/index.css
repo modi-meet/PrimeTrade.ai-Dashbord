@@ -15,59 +15,194 @@
     h5,
     h6 {
         font-family: 'Plus Jakarta Sans', sans-serif;
+        @apply tracking-tight;
+    }
+
+    :focus-visible {
+        @apply outline-none ring-2 ring-slate-900 ring-offset-2;
     }
 }
 
 @layer components {
+
+    /* Buttons */
     .btn-primary {
-        @apply bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 px-5 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md;
+        @apply bg-slate-900 hover:bg-slate-800 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md active:scale-[0.98] text-sm sm:text-base sm:py-3 sm:px-5;
     }
 
     .btn-secondary {
-        @apply bg-white hover:bg-slate-50 text-slate-700 font-medium py-3 px-5 rounded-lg border border-slate-200 transition-all duration-200 hover:border-slate-300;
+        @apply bg-white hover:bg-slate-50 text-slate-700 font-medium py-2.5 px-4 rounded-lg border border-slate-200 transition-all duration-200 hover:border-slate-300 active:scale-[0.98] text-sm sm:text-base;
+    }
+
+    .btn-ghost {
+        @apply text-slate-500 hover:text-slate-700 hover:bg-slate-100 font-medium py-2 px-3 rounded-lg transition-all duration-200;
     }
 
     .btn-icon {
-        @apply p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all duration-200;
+        @apply p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all duration-200 active:scale-95;
     }
 
+    /* Inputs */
     .input-field {
-        @apply w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all duration-200 text-[15px];
+        @apply w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 transition-all duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 hover:border-slate-300 sm:px-4 sm:py-3 sm:text-[15px];
     }
 
+    /* Cards */
     .card {
-        @apply bg-white border border-slate-200 rounded-xl shadow-sm;
+        @apply bg-white border border-slate-200 rounded-xl shadow-sm transition-all duration-200;
     }
 
+    .card-interactive {
+        @apply card hover:border-slate-300 hover:shadow-md cursor-pointer;
+    }
+
+    /* Labels and text */
     .label {
-        @apply block text-sm font-medium text-slate-600 mb-2 tracking-wide;
+        @apply block text-sm font-medium text-slate-600 mb-1.5 tracking-wide sm:mb-2;
     }
 
     .error-text {
-        @apply text-rose-600 text-sm mt-1.5;
+        @apply text-rose-600 text-xs mt-1 flex items-center gap-1 sm:text-sm sm:mt-1.5;
     }
 
     .link {
-        @apply text-slate-900 font-semibold hover:underline underline-offset-2;
+        @apply text-slate-900 font-semibold hover:underline underline-offset-2 transition-colors;
     }
 
+    /* Stats */
     .stat-card {
-        @apply bg-white border border-slate-200 rounded-xl p-5 transition-all duration-200 hover:border-slate-300 hover:shadow-sm;
+        @apply bg-white border border-slate-200 rounded-lg p-3 transition-all duration-300 hover:border-slate-300 hover:shadow-sm sm:rounded-xl sm:p-5;
     }
 
+    /* Task items */
     .task-item {
-        @apply flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors duration-150 border-b border-slate-100 last:border-b-0;
+        @apply flex items-center gap-3 p-3 transition-all duration-200 border-b border-slate-100 last:border-b-0 sm:gap-4 sm:p-4;
     }
 
+    .task-item:hover {
+        @apply bg-slate-50/80;
+    }
+
+    /* Checkbox */
     .checkbox {
-        @apply w-5 h-5 rounded-md border-2 flex items-center justify-center cursor-pointer transition-all duration-200;
+        @apply w-5 h-5 rounded-md border-2 flex items-center justify-center cursor-pointer transition-all duration-200 flex-shrink-0;
     }
 
     .checkbox-unchecked {
-        @apply border-slate-300 hover:border-slate-400 bg-white;
+        @apply border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50;
     }
 
     .checkbox-checked {
         @apply border-slate-900 bg-slate-900 text-white;
+    }
+
+    /* Loading spinner */
+    .spinner {
+        @apply w-5 h-5 border-2 border-slate-200 border-t-slate-600 rounded-full animate-spin;
+    }
+
+    /* Skeleton loader */
+    .skeleton {
+        @apply bg-slate-200 rounded animate-pulse;
+    }
+
+    /* Badge */
+    .badge {
+        @apply inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium sm:text-xs sm:px-2.5;
+    }
+
+    .badge-success {
+        @apply badge bg-emerald-50 text-emerald-700;
+    }
+
+    .badge-warning {
+        @apply badge bg-amber-50 text-amber-700;
+    }
+
+    /* Tooltip */
+    .tooltip {
+        @apply absolute z-50 px-2 py-1 text-xs font-medium text-white bg-slate-900 rounded-md opacity-0 invisible transition-all duration-200 whitespace-nowrap;
+    }
+
+    .tooltip-trigger:hover .tooltip {
+        @apply opacity-100 visible;
+    }
+
+    /* Transitions */
+    .fade-in {
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .slide-up {
+        animation: slideUp 0.3s ease-out;
+    }
+
+    .scale-in {
+        animation: scaleIn 0.2s ease-out;
+    }
+}
+
+/* Keyframes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-400;
+}
+
+/* Selection */
+::selection {
+    @apply bg-slate-900 text-white;
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 639px) {
+    .stat-card p.text-3xl {
+        font-size: 1.5rem;
     }
 }
