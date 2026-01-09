@@ -1,64 +1,58 @@
-# PrimeTrade - Task Management
+# PrimeTrade.AI - Task Management
 
-A modern, scalable task management app with React frontend and Node.js backend.
+A **production-ready**, **modular** React + Node.js task management app with professional UI patterns.
 
-## Tech Stack
+---
 
-**Frontend**: React 19, TypeScript, Vite, TailwindCSS  
-**Backend**: Node.js, Express, MongoDB, JWT
+## Frontend Highlights
 
-## Features
+| Feature | What it demonstrates |
+|---------|---------------------|
+|  **Custom Hooks** | `useTasks`, `useToast`, `useAuth` - Clean separation of concerns |
+|  **Modular Components** | `Header`, `Stats`, `TaskList` - Reusable, testable UI blocks |
+|  **Optimistic Updates** | Instant UI feedback before API confirmation |
+|  **TailwindCSS Design System** | Consistent styling with component classes |
+| 📱 **Mobile-First Responsive** | Hamburger menu, adaptive layouts, touch-friendly |
+| 🔄 **Loading States** | Skeleton loaders, spinners, smooth transitions |
+|  **Accessibility** | Focus states, ARIA labels, keyboard navigation (⌘K search) |
+| **Toast Notifications** | Success/error feedback with auto-dismiss |
+| 🔐 **JWT Auth Context** | Token management with axios interceptors |
 
-- 🔐 JWT Authentication (Register/Login)
-- ✅ Task CRUD with Optimistic Updates
-- 🔍 Search & Filter
-- 📱 Responsive Mobile Design
-- 🧩 Modular Component Architecture
+---
 
-## Architecture
+## 🛠 Tech Stack
+
+**Frontend:** React 19 • TypeScript • Vite • TailwindCSS  
+**Backend:** Node.js • Express • MongoDB • JWT
+
+## 📁 Architecture
 
 ```
-client/
-├── src/
-│   ├── hooks/          # Custom hooks (useTasks, useToast, useAuth)
-│   ├── components/     # Reusable UI (Header, Stats, TaskList, etc.)
-│   ├── pages/          # Page components (Dashboard, Login, Register)
-│   ├── contexts/       # React contexts (AuthContext)
-│   └── api/            # Axios instance & interceptors
-server/
-├── src/
-│   ├── controllers/    # Route handlers
-│   ├── models/         # Mongoose schemas
-│   ├── routes/         # Express routes
-│   ├── middleware/     # Auth middleware
-│   └── config/         # Database config
+client/src/
+├── hooks/        → useTasks, useToast, useAuth
+├── components/   → Header, Stats, TaskList, Toast, Skeleton
+├── pages/        → Dashboard, Login, Register
+├── contexts/     → AuthContext
+└── api/          → Axios with interceptors
 ```
 
 ## Quick Start
 
 ```bash
 # Backend
-cd server && npm install
-cp .env.example .env  # Configure MONGO_URI, JWT_SECRET
-npm run dev
+cd server && npm install && npm run dev
+# load mongo_URI , JWT_SECRET in .env file
 
-# Frontend
-cd client && npm install
-npm run dev
+
+# Frontend  
+cd client && npm install && npm run dev
 ```
 
-## Environment Variables
+## 📄 Docs
 
-```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/primetrade
-JWT_SECRET=your_secret_key
-```
+- [API Documentation](./API_DOCS.md)
+- [Scalability Notes](./SCALABILITY.md)
 
-## API Docs
+---
 
-See [API_DOCS.md](./API_DOCS.md)
-
-## License
-
-MIT
+**MIT License** • Built with ❤️
