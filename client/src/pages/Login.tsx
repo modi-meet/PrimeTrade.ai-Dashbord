@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../hooks/useAuth';
 import { useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 
 interface LoginForm {
     email: string;
@@ -28,41 +29,55 @@ export const Login = () => {
 
     return (
         <div className="min-h-screen flex">
-            {/* Left Panel - Branding */}
-            <div className="hidden lg:flex lg:w-1/2 bg-gray-900 text-white p-12 flex-col justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold">PrimeTrade</h1>
+            {/* Left Panel - Brand */}
+            <div className="hidden lg:flex lg:w-1/2 bg-slate-900 p-12 flex-col justify-between relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900" />
+                <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+                <div className="absolute bottom-0 left-0 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl" />
+
+                <div className="relative z-10">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                            <span className="text-slate-900 font-bold text-xl">P</span>
+                        </div>
+                        <span className="text-white font-bold text-xl tracking-tight">PrimeTrade</span>
+                    </div>
                 </div>
-                <div>
-                    <h2 className="text-4xl font-bold leading-tight mb-4">
-                        Manage your tasks<br />with simplicity.
+
+                <div className="relative z-10">
+                    <h2 className="text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight mb-6">
+                        Focus on what<br />matters most.
                     </h2>
-                    <p className="text-gray-400 text-lg">
-                        A clean, focused workspace for getting things done.
+                    <p className="text-slate-400 text-lg max-w-md">
+                        A simple, powerful task manager designed to help you stay organized and productive.
                     </p>
                 </div>
-                <p className="text-gray-500 text-sm">© 2026 PrimeTrade. All rights reserved.</p>
+
+                <p className="relative z-10 text-slate-500 text-sm">© 2026 PrimeTrade. All rights reserved.</p>
             </div>
 
             {/* Right Panel - Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-16">
                 <div className="w-full max-w-md">
-                    <div className="lg:hidden mb-8">
-                        <h1 className="text-2xl font-bold text-gray-900">PrimeTrade</h1>
+                    <div className="lg:hidden mb-10 flex items-center gap-3">
+                        <div className="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center">
+                            <span className="text-white font-bold text-xl">P</span>
+                        </div>
+                        <span className="text-slate-900 font-bold text-xl tracking-tight">PrimeTrade</span>
                     </div>
 
-                    <h2 className="text-2xl font-semibold text-gray-900 mb-2">Welcome back</h2>
-                    <p className="text-gray-500 mb-8">Enter your credentials to access your account.</p>
+                    <h2 className="text-3xl font-bold text-slate-900 tracking-tight mb-2">Welcome back</h2>
+                    <p className="text-slate-500 mb-8">Sign in to your account to continue.</p>
 
                     {error && (
-                        <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                        <div className="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 text-sm">
                             {error}
                         </div>
                     )}
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                         <div>
-                            <label className="label">Email</label>
+                            <label className="label">Email address</label>
                             <input
                                 type="email"
                                 {...register('email', {
@@ -89,13 +104,19 @@ export const Login = () => {
                             {errors.password && <p className="error-text">{errors.password.message}</p>}
                         </div>
 
-                        <button type="submit" disabled={isSubmitting} className="btn-primary w-full">
-                            {isSubmitting ? 'Signing in...' : 'Sign in'}
+                        <button type="submit" disabled={isSubmitting} className="btn-primary w-full flex items-center justify-center gap-2">
+                            {isSubmitting ? 'Signing in...' : (
+                                <>
+                                    Sign in
+                                    <ArrowRight size={18} />
+                                </>
+                            )}
                         </button>
                     </form>
 
-                    <p className="text-center text-gray-500 mt-6">
-                        Don't have an account? <Link to="/register" className="link">Create one</Link>
+                    <p className="text-center text-slate-500 mt-8">
+                        Don't have an account?{' '}
+                        <Link to="/register" className="link">Create one</Link>
                     </p>
                 </div>
             </div>
