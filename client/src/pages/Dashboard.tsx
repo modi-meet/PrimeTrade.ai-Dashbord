@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import api from '../api/axios';
-import { ITask } from '../types';
-import { Plus, Trash2, CheckCircle, Circle, LogOut } from 'lucide-react';
+import type { ITask } from '../types';
 import { useForm } from 'react-hook-form';
+import { Plus, Trash2, Check, LogOut, Search, Filter } from 'lucide-react';
 
 export const Dashboard = () => {
     const { user, logout } = useAuth();
     const [tasks, setTasks] = useState<ITask[]>([]);
-    const { register, handleSubmit, reset } = useForm();
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'completed'>('all');
+    const { register, handleSubmit, reset } = useForm<{ title: string }>();
 
     const fetchTasks = async () => {
         try {
@@ -26,10 +28,11 @@ export const Dashboard = () => {
         fetchTasks();
     }, []);
 
-    const addTask = async (data: any) => {
+    const addTask = async (data: { title: string }) => {
+        if (!data.title.trim()) return;
         try {
-            const response = await api.post('/tasks', data);
-            setTasks([...tasks, response.data]);
+            const response = await api.post('/tasks', { title: data.title });
+            setTasks([response.data, ...tasks]);
             reset();
         } catch (error) {
             console.error('Error adding task:', error);
@@ -56,84 +59,145 @@ export const Dashboard = () => {
         }
     };
 
+    const filteredTasks = tasks.filter((task) => {
+        const matchesSearch = task.title.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesFilter =
+            filterStatus === 'all' ||
+            (filterStatus === 'active' && !task.isCompleted) ||
+            (filterStatus === 'completed' && task.isCompleted);
+        return matchesSearch && matchesFilter;
+    });
+
+    const stats = {
+        total: tasks.length,
+        completed: tasks.filter((t) => t.isCompleted).length,
+        active: tasks.filter((t) => !t.isCompleted).length,
+    };
+
     return (
         <div className="min-h-screen bg-gray-50">
-            <nav className="bg-white shadow-sm p-4">
-                <div className="max-w-4xl mx-auto flex justify-between items-center">
-                    <h1 className="text-xl font-bold text-gray-800">PrimeTrade Dashboard</h1>
-                    <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
-                                {user?.name?.charAt(0).toUpperCase()}
+            {/* Header */}
+            <header className="bg-white border-b border-gray-200">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between h-16">
+                        <h1 className="text-xl font-bold text-gray-900">PrimeTrade</h1>
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                                    {user?.name?.charAt(0).toUpperCase()}
+                                </div>
+                                <span className="text-sm text-gray-700 hidden sm:block">{user?.name}</span>
                             </div>
-                            <span className="text-gray-600">{user?.name}</span>
+                            <button
+                                onClick={logout}
+                                className="flex items-center gap-1.5 text-gray-500 hover:text-gray-700 text-sm"
+                            >
+                                <LogOut size={16} />
+                                <span className="hidden sm:block">Logout</span>
+                            </button>
                         </div>
-                        <button
-                            onClick={logout}
-                            className="flex items-center gap-2 text-gray-600 hover:text-red-500 transition-colors"
-                        >
-                            <LogOut size={20} />
-                            Logout
-                        </button>
                     </div>
                 </div>
-            </nav>
+            </header>
 
-            <main className="max-w-4xl mx-auto mt-8 p-4">
-                <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-                    <h2 className="text-xl font-semibold mb-4">Add New Task</h2>
-                    <form onSubmit={handleSubmit(addTask)} className="flex gap-4">
+            {/* Main */}
+            <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-4 mb-8">
+                    <div className="card p-4">
+                        <p className="text-sm text-gray-500">Total Tasks</p>
+                        <p className="text-2xl font-semibold text-gray-900">{stats.total}</p>
+                    </div>
+                    <div className="card p-4">
+                        <p className="text-sm text-gray-500">Active</p>
+                        <p className="text-2xl font-semibold text-gray-900">{stats.active}</p>
+                    </div>
+                    <div className="card p-4">
+                        <p className="text-sm text-gray-500">Completed</p>
+                        <p className="text-2xl font-semibold text-gray-900">{stats.completed}</p>
+                    </div>
+                </div>
+
+                {/* Add Task */}
+                <div className="card p-4 mb-6">
+                    <form onSubmit={handleSubmit(addTask)} className="flex gap-3">
                         <input
                             type="text"
-                            {...register('title', { required: true })}
+                            {...register('title')}
                             placeholder="What needs to be done?"
-                            className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="input-field flex-1"
                         />
-                        <button
-                            type="submit"
-                            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 flex items-center gap-2"
-                        >
-                            <Plus size={20} />
-                            Add
+                        <button type="submit" className="btn-primary flex items-center gap-2">
+                            <Plus size={18} />
+                            <span className="hidden sm:block">Add Task</span>
                         </button>
                     </form>
                 </div>
 
-                <div className="space-y-4">
-                    <h2 className="text-xl font-semibold text-gray-800">My Tasks</h2>
+                {/* Search & Filter */}
+                <div className="flex flex-col sm:flex-row gap-3 mb-6">
+                    <div className="relative flex-1">
+                        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Search tasks..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="input-field pl-10"
+                        />
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Filter size={18} className="text-gray-400" />
+                        <select
+                            value={filterStatus}
+                            onChange={(e) => setFilterStatus(e.target.value as any)}
+                            className="input-field w-auto"
+                        >
+                            <option value="all">All</option>
+                            <option value="active">Active</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+
+                {/* Task List */}
+                <div className="card">
                     {loading ? (
-                        <p>Loading tasks...</p>
-                    ) : tasks.length === 0 ? (
-                        <p className="text-gray-500 text-center py-8">No tasks yet. Add one above!</p>
+                        <div className="p-8 text-center text-gray-500">Loading tasks...</div>
+                    ) : filteredTasks.length === 0 ? (
+                        <div className="p-8 text-center text-gray-500">
+                            {searchQuery || filterStatus !== 'all'
+                                ? 'No matching tasks found.'
+                                : 'No tasks yet. Add one above!'}
+                        </div>
                     ) : (
-                        tasks.map((task) => (
-                            <div
-                                key={task._id}
-                                className="bg-white p-4 rounded-lg shadow-sm flex items-center justify-between group hover:shadow-md transition-shadow"
-                            >
-                                <div className="flex items-center gap-4 flex-1">
+                        <ul className="divide-y divide-gray-100">
+                            {filteredTasks.map((task) => (
+                                <li key={task._id} className="flex items-center gap-3 p-4 hover:bg-gray-50 group">
                                     <button
                                         onClick={() => toggleTask(task)}
-                                        className={`text-gray-400 hover:text-blue-500 transition-colors ${task.isCompleted ? 'text-green-500' : ''
+                                        className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${task.isCompleted
+                                                ? 'bg-gray-900 border-gray-900 text-white'
+                                                : 'border-gray-300 hover:border-gray-400'
                                             }`}
                                     >
-                                        {task.isCompleted ? <CheckCircle size={24} /> : <Circle size={24} />}
+                                        {task.isCompleted && <Check size={12} />}
                                     </button>
                                     <span
-                                        className={`text-lg ${task.isCompleted ? 'text-gray-400 line-through' : 'text-gray-800'
+                                        className={`flex-1 ${task.isCompleted ? 'text-gray-400 line-through' : 'text-gray-900'
                                             }`}
                                     >
                                         {task.title}
                                     </span>
-                                </div>
-                                <button
-                                    onClick={() => deleteTask(task._id)}
-                                    className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                                >
-                                    <Trash2 size={20} />
-                                </button>
-                            </div>
-                        ))
+                                    <button
+                                        onClick={() => deleteTask(task._id)}
+                                        className="text-gray-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
                     )}
                 </div>
             </main>
