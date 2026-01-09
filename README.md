@@ -1,61 +1,64 @@
-# PrimeTrade - Task Management Application
+# PrimeTrade - Task Management
 
-A modern, scalable web application with authentication and dashboard features.
+A modern, scalable task management app with React frontend and Node.js backend.
 
 ## Tech Stack
 
-### Frontend
-- React 19 + TypeScript
-- Vite
-- TailwindCSS
-- React Router DOM
-- React Hook Form
-- Axios
-
-### Backend
-- Node.js + Express
-- MongoDB + Mongoose
-- JWT Authentication
-- bcrypt for password hashing
+**Frontend**: React 19, TypeScript, Vite, TailwindCSS  
+**Backend**: Node.js, Express, MongoDB, JWT
 
 ## Features
 
-- ✅ User Registration & Login (JWT)
-- ✅ Protected Dashboard Routes
-- ✅ Task CRUD Operations
-- ✅ Search & Filter
-- ✅ Responsive Design
-- ✅ Form Validation (Client + Server)
+- 🔐 JWT Authentication (Register/Login)
+- ✅ Task CRUD with Optimistic Updates
+- 🔍 Search & Filter
+- 📱 Responsive Mobile Design
+- 🧩 Modular Component Architecture
 
-## Getting Started
+## Architecture
 
-### Prerequisites
-- Node.js 18+
-- MongoDB (local or Atlas)
+```
+client/
+├── src/
+│   ├── hooks/          # Custom hooks (useTasks, useToast, useAuth)
+│   ├── components/     # Reusable UI (Header, Stats, TaskList, etc.)
+│   ├── pages/          # Page components (Dashboard, Login, Register)
+│   ├── contexts/       # React contexts (AuthContext)
+│   └── api/            # Axios instance & interceptors
+server/
+├── src/
+│   ├── controllers/    # Route handlers
+│   ├── models/         # Mongoose schemas
+│   ├── routes/         # Express routes
+│   ├── middleware/     # Auth middleware
+│   └── config/         # Database config
+```
 
-### Backend Setup
+## Quick Start
+
 ```bash
-cd server
-npm install
-# Create .env file with:
-# PORT=5000
-# MONGO_URI=mongodb://localhost:27017/primetrade
-# JWT_SECRET=your_secret_key
+# Backend
+cd server && npm install
+cp .env.example .env  # Configure MONGO_URI, JWT_SECRET
+npm run dev
+
+# Frontend
+cd client && npm install
 npm run dev
 ```
 
-### Frontend Setup
-```bash
-cd client
-npm install
-npm run dev
+## Environment Variables
+
+```env
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/primetrade
+JWT_SECRET=your_secret_key
 ```
 
-## API Documentation
+## API Docs
+
 See [API_DOCS.md](./API_DOCS.md)
 
-## Scalability
-See [SCALABILITY.md](./SCALABILITY.md)
-
 ## License
+
 MIT
