@@ -12,9 +12,7 @@ export const Header = () => {
                 <div className="flex items-center justify-between h-14 sm:h-16">
                     {/* Logo - always visible */}
                     <div className="flex items-center gap-2 sm:gap-3">
-                        <div className="w-8 h-8 sm:w-9 sm:h-9 bg-slate-900 rounded-lg flex items-center justify-center shadow-sm">
-                            <span className="text-white font-bold text-base sm:text-lg">P</span>
-                        </div>
+                        <img src="/primetrade-logo.png" alt="PrimeTrade" className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg shadow-sm object-cover" />
                         <span className="text-slate-900 font-bold text-base sm:text-lg tracking-tight">PrimeTrade</span>
                     </div>
 

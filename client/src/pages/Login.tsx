@@ -38,9 +38,7 @@ export const Login = () => {
 
                 <div className="relative z-10">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md">
-                            <span className="text-slate-900 font-bold text-xl">P</span>
-                        </div>
+                        <img src="/primetrade-logo.png" alt="PrimeTrade" className="w-10 h-10 rounded-lg shadow-md" />
                         <span className="text-white font-bold text-xl tracking-tight">PrimeTrade</span>
                     </div>
                 </div>
@@ -61,9 +59,7 @@ export const Login = () => {
             <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-16">
                 <div className="w-full max-w-md fade-in">
                     <div className="lg:hidden mb-10 flex items-center gap-3">
-                        <div className="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center shadow-sm">
-                            <span className="text-white font-bold text-xl">P</span>
-                        </div>
+                        <img src="/primetrade-logo.png" alt="PrimeTrade" className="w-10 h-10 rounded-lg shadow-sm object-cover" />
                         <span className="text-slate-900 font-bold text-xl tracking-tight">PrimeTrade</span>
                     </div>
 

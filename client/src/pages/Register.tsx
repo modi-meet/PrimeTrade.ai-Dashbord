@@ -42,9 +42,7 @@ export const Register = () => {
 
                 <div className="relative z-10">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md">
-                            <span className="text-slate-900 font-bold text-xl">P</span>
-                        </div>
+                        <img src="/primetrade-logo.png" alt="PrimeTrade" className="w-10 h-10 rounded-lg shadow-md object-cover" />
                         <span className="text-white font-bold text-xl tracking-tight">PrimeTrade</span>
                     </div>
                 </div>
@@ -75,9 +73,7 @@ export const Register = () => {
             <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-16">
                 <div className="w-full max-w-md fade-in">
                     <div className="lg:hidden mb-10 flex items-center gap-3">
-                        <div className="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center shadow-sm">
-                            <span className="text-white font-bold text-xl">P</span>
-                        </div>
+                        <img src="/primetrade-logo.png" alt="PrimeTrade" className="w-10 h-10 rounded-lg shadow-sm object-cover" />
                         <span className="text-slate-900 font-bold text-xl tracking-tight">PrimeTrade</span>
                     </div>
 
@@ -143,14 +139,14 @@ export const Register = () => {
                                     <div className="flex-1 h-1 bg-slate-200 rounded-full overflow-hidden">
                                         <div
                                             className={`h-full transition-all duration-300 ${passwordStrength === 'strong' ? 'w-full bg-emerald-500'
-                                                    : passwordStrength === 'medium' ? 'w-2/3 bg-amber-500'
-                                                        : 'w-1/3 bg-rose-500'
+                                                : passwordStrength === 'medium' ? 'w-2/3 bg-amber-500'
+                                                    : 'w-1/3 bg-rose-500'
                                                 }`}
                                         />
                                     </div>
                                     <span className={`text-xs ${passwordStrength === 'strong' ? 'text-emerald-600'
-                                            : passwordStrength === 'medium' ? 'text-amber-600'
-                                                : 'text-rose-600'
+                                        : passwordStrength === 'medium' ? 'text-amber-600'
+                                            : 'text-rose-600'
                                         }`}>
                                         {passwordStrength === 'strong' ? 'Strong' : passwordStrength === 'medium' ? 'Medium' : 'Weak'}
                                     </span>
