@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { IUser } from '../types';
-import api from '../api/axios';
 
 interface AuthContextType {
     user: IUser | null;
